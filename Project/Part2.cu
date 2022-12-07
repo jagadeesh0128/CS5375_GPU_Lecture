@@ -23,8 +23,8 @@ void GPUmatmul(int N, double *x, double *y, double *ans)
   int index_y=threadindex.y;
   int stride_y= blockDim.y;
   
-  for(int i = 0; i < N; i++) {
-    for(int j = 0; j < N; j++) {
+  for(int i = index_x; i < N; i+=stride_x) {
+    for(int j = index_y; j < N; j+=stride) {
       for(int k = 0; k < N; k++) {
         ans[i*N+j] += (x[i*N+k] * y[k*N+j]);
       }
