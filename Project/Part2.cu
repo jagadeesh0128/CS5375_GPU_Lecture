@@ -1,9 +1,9 @@
 /*
- * _MATRIXMUL_GPU_CU_
+ * MATRIXMUL_GPU_CU
  *
  * 2022 Mert SIDE
  *
- * CS5375 Computer Systems Organization and Architecture 
+ * CS5375 Computer Systems Organization and Architecture
  * Guest Lecture: GPU Programming
  *
  * Multiplying two matrices on the GPU
@@ -15,27 +15,30 @@
 #include <stdlib.h>
 
 // ------------------------------------------------------------------ GPUmatmul
-__global__
+//Implemented threads by using stride 
+
+_global_
 void GPUmatmul(int N, double *x, double *y, double *ans)
 {
-  int index_x=threadidx.x;  //initilization of threads by using strides//
-  int stride_x= blockDim.x;
-  int index_y=threadidx.y;
-  int stride_y= blockDim.y;
-  
-  for(int i = index_x; i < N; i+=stride_x) {
-    for(int j = index_y; j < N; j+=stride_y) {
-      for(int k = 0; k < N; k++) {
-        ans[i*N+j] += (x[i*N+k] * y[k*N+j]);
-      }
+int index_x=threadIdx.x;  // initializinf the threads by using strides 
+int index_y=threadIdx.y;
+int stride_x= blockDim.x;
+int stride_y= blockDim.y;
+for (int i= index_x; i <N; i+=stride_x){
+   for (int j= index_y; j<N; j+=stride_y){  
+      for (int k=0;k<N;k++){
+            ans[i*N+j]+=(x[i*N+k]*y[k*N+j]);
+        }
     }
-  }
 }
+}
+
+
 
 // ---------------------------------------------------------------------- check
 bool check(int N, double *ans)
 {
-  for(int i = 0; i < N; i++) {
+   for(int i = 0; i < N; i++) {
     for(int j = 0; j < N; j++) {
       if(ans[i*N+j] != 20.0) return false;
     }
@@ -51,19 +54,15 @@ int main(void)
   printf("Size of matrix (N) is %d by %d.\n", N, N);
   int iter = 3;
   clock_t t;
-  
+
   // Martices
   double *x, *y, *ans;
-
-  // TODO: Allocate Unified Memory - accessible from both CPU and GPU
-  // ...
-  // ...
-  // ...
-  cudaMallocManaged(&x, N*N*sizeof(double));
-  cudaMallocManaged(&y, N*N*sizeof(double));
-  cudaMallocManaged(&ans, N*N*sizeof(double));
-  
-
+   // Allocate memory accessible to both CPU and GPU
+  cudaMallocManaged(&x,sizeof(double)*N*N);
+  cudaMallocManaged(&y,sizeof(double)*N*N);
+  cudaMallocManaged(&ans,sizeof(double)*N*N);
+   
+   
   // ..........................................................................
   // initialize x,y and ans arrays on the host
   for (int i = 0; i < N; i++) {
@@ -80,13 +79,15 @@ int main(void)
   // Run kernel on GPU
   for(int i = 0; i <= iter; i++) {
     t = clock();
-    GPUmatmul<<<1,1>>>(N, x, y,ans);
+     
+    //Run Kernel on 33M elements on the GPU
+    GPUmatmul<<<1, 256>>>(N, x, y,ans);   //Changed threads to 256
     cudaDeviceSynchronize();
     t = clock() - t;
     if(i) avg += t; //we will ignore the first run
     // printf ("It took GPU-%d %f ms.\n",i,(((double)t)/CLOCKS_PER_SEC)*1000);
   }
-
+  
   avg /= iter;
   avg /= CLOCKS_PER_SEC;
   avg *= 1000;
@@ -95,15 +96,13 @@ int main(void)
   else std::cout<<"RUN NOT OK."<<std::endl;
 
   // ..........................................................................
-  
-  // TODO: Free memory
+
+  // Free memory
   // ...
-  // ...
-  // ...
+
   cudaFree(x);
   cudaFree(y);
   cudaFree(ans);
-  
   return 0;
 }
 /* EOF */
