@@ -18,9 +18,9 @@
 __global__
 void GPUmatmul(int N, double *x, double *y, double *ans)
 {
-  int index_x=threadindex.x;  //initilization of threads by using strides//
+  int index_x=threadidx.x;  //initilization of threads by using strides//
   int stride_x= blockDim.x;
-  int index_y=threadindex.y;
+  int index_y=threadidx.y;
   int stride_y= blockDim.y;
   
   for(int i = index_x; i < N; i+=stride_x) {
