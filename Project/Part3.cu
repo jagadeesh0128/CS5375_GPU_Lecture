@@ -20,7 +20,7 @@
 _global_
 void GPUmatmul(int N, double *x, double *y, double *ans)
 {
-int index_x=threadIdx.x;  // initializinf the threads by using strides 
+int index_x=threadIdx.x;  
 int index_y=threadIdx.y;
 int stride_x= blockDim.x;
 int stride_y= blockDim.y;
