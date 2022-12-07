@@ -65,7 +65,7 @@ int main(void)
   // initialize x,y and ans arrays on the host
   for (int i = 0; i < N; i++) {
     for(int j = 0; j < N; j++) {
-	   x[i*N+j] = 5;
+      x[i*N+j] = 5;
       y[i*N+j] = (i==j?1:0);
       ans[i*N+j] = (double)0.000000000000;
     }
@@ -78,8 +78,8 @@ int main(void)
   for(int i = 0; i <= iter; i++) {
     t = clock();
     int blockSize=256;
-    int numBlocks=(N+blockSize-1)/blockSize;
-    GPUmatmul<<<numBlocks,blockSize>>>(N, x, y,ans);
+    int numOfBlocks=(N+blockSize-1)/blockSize;
+    GPUmatmul<<<numOfBlocks,blockSize>>>(N, x, y,ans);
     cudaDeviceSynchronize();
     t = clock() - t;
     if(i) avg += t; //we will ignore the first run
