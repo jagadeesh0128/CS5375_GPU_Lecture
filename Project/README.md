@@ -3,9 +3,9 @@ Matrix Multiplication Kernel
 
 **Texas Tech University, CS5375 Computer Systems Organization and Architecture, Project**
 
-* (TODO) JAGADEESH MADDINENI 
-  * (TODO) R11788222
-  * (TODO) jmaddine@ttu.edu
+* JAGADEESH MADDINENI 
+* R11788222
+* jmaddine@ttu.edu
 
 ## CPU Code Execution
 1. Initial step is to conenct HPCC using e-raider credentials
@@ -20,10 +20,30 @@ Matrix Multiplication Kernel
 ## PART1
 
 the below are the commands to exectute the requirements of Part1.
-1. Interactive -p gpu-build
-2. nvcc matrixMul_gpu -o matrixMul_gpu.exe
-3. ./matrixMul_gpu
+g++ matrixMul_cpp.cpp -o matrixMul_cpu.exe // run the command to execute the given CPP file and store the output in .exe format
+./matrixMul_cpu.exe // To display the run time
+interactive -p gpu-build // To execute the cuda file
+nvcc matrixMul_gpu.cu -o matrixMul_gpu.exe // To execute the cuda file and output stored in the .exe format
+./matrixMul_gpu.exe //To compute and display the execution time
+nprof ./matrixMul.gpu.exe // To profiling
 
-Include comments and analysis, etc.
+## PART2
+
+nvcc matrixMul_gpu_part2.cu -o matrixMul_gpu_part2.exe //To compile the code
+./matrixMul_gpu_part2.exe // To compile and display the average time
+nvprof ./matrix_gpu_part2.exe // For Profiling the requirements
+
+
+## PART3
+
+nvcc matrixMul.gpu_part3.cu -o matrixMul_gpu_part3.exe // To execute the code
+./matrixMul_gpu_part3.exe // To compile and display the average time
+nvprof ./matrix_gpu_part3.exe // For Profiling the requirements
+
+## PART4
+
+nvcc matrixMul.gpu_part4.cu -o matrixMul_gpu_part4.exe // To execute the code
+./matrixMul_gpu_part4.exe // To compile and display the average time
+nvprof ./matrix_gpu_part4.exe // For Profiling the requirements
 
 
